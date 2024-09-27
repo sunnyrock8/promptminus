@@ -1,8 +1,5 @@
 import tiktoken
 import spacy
-import nltk
-from nltk.stem import WordNetLemmatizer
-from nltk.corpus import stopwords
 
 enc = tiktoken.get_encoding("o200k_base")
 
@@ -26,30 +23,33 @@ nlp = spacy.load('en_core_web_sm')
 
 stop_words = nlp.Defaults.stop_words
 
-#pre processing 
-text=""
+#re processing 
+text_arr = [] 
 for word in prompt.split(): 
   if word in stop_words: 
     continue 
-  text += " "+ word 
+  text_arr.append(word)
+
+prompt = ' '.join(text_arr)
 
 # Create a Doc object
-doc = nlp(text) 
+doc = nlp(prompt) 
 
-new_prompt = ""
+new_prompt = []
 
 # Lemmatize each token 
 for token in doc: 
   #print(token)
   lemma = token.lemma_ 
   #print(token.text, "-->", lemma)
-  new_prompt += lemma + " "
+  new_prompt.append(lemma) 
 
+new_prompt_str = ' '.join(new_prompt) 
 
-tokens = enc.encode(new_prompt)
+tokens = enc.encode(new_prompt_str)
 num_tokens = len(tokens)
 
-print(new_prompt)
+print(new_prompt_str)
 
 new_num_tokens = num_tokens
 
