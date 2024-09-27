@@ -1,5 +1,6 @@
 import tiktoken
 import spacy
+import string
 
 enc = tiktoken.get_encoding("o200k_base")
 
@@ -7,13 +8,11 @@ enc = tiktoken.get_encoding("o200k_base")
 enc = tiktoken.encoding_for_model("gpt-4o")
 
 prompt = input()
-print("original prompt: " + prompt)
+#print("original prompt: " + prompt)
 
 # Encode the text to get the tokens
 tokens = enc.encode(prompt)
-
 num_tokens = len(tokens)
-
 orig_num_tokens = num_tokens
 
 print(f"number of tokens used by original prompt: {num_tokens}")
@@ -23,11 +22,12 @@ nlp = spacy.load('en_core_web_sm')
 
 stop_words = nlp.Defaults.stop_words
 
-#re processing 
+#pre processing 
 text_arr = [] 
 for word in prompt.split(): 
-  if word in stop_words: 
+  if word in stop_words or word.strip() == '': 
     continue 
+  word = word.translate(str.maketrans('', '', string.punctuation))
   text_arr.append(word)
 
 prompt = ' '.join(text_arr)
@@ -39,17 +39,14 @@ new_prompt = []
 
 # Lemmatize each token 
 for token in doc: 
-  #print(token)
   lemma = token.lemma_ 
-  #print(token.text, "-->", lemma)
   new_prompt.append(lemma) 
 
 new_prompt_str = ' '.join(new_prompt) 
-
 tokens = enc.encode(new_prompt_str)
 num_tokens = len(tokens)
 
-print(new_prompt_str)
+#print(new_prompt_str)
 
 new_num_tokens = num_tokens
 
