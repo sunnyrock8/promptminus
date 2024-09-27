@@ -1,5 +1,8 @@
 import tiktoken
 import spacy
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
 
 enc = tiktoken.get_encoding("o200k_base")
 
@@ -13,6 +16,8 @@ print("original prompt: " + prompt)
 tokens = enc.encode(prompt)
 
 num_tokens = len(tokens)
+
+orig_num_tokens = num_tokens
 
 print(f"number of tokens used by original prompt: {num_tokens}")
 
@@ -46,4 +51,10 @@ num_tokens = len(tokens)
 
 print(new_prompt)
 
+new_num_tokens = num_tokens
+
 print(f"number of tokens used by new prompt: {num_tokens}")
+
+perc = (orig_num_tokens - new_num_tokens) / orig_num_tokens * 100
+
+print(f"percentage reduction in number of tokens used: {perc}%")
