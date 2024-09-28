@@ -16,7 +16,6 @@
         .catch((error) => console.error('Error white posting to backend:', error));
         //return text.toUpperCase();
         // we also need to trace back to the backend and return the output prompt plus
-
         // Send the string to your Python backend
 
         fetch('http://127.0.0.1:5000/receive_event', {
@@ -52,7 +51,7 @@
 
                 console.log("Current prompt text:", promptText);
 
-                chrome.storage.local.get('isUppercaseEnabled', function (data) {
+                chrome.storage.local.get('isUppercaseEnabled', function(data) {
                     console.log("Uppercase enabled:", data.isUppercaseEnabled);
                     if (data.isUppercaseEnabled) {
                         let processedText = setTimeout(processPrompt(promptText), 10000);
