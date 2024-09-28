@@ -3,7 +3,7 @@
   "name": "Prompt+",
   "version": "1.0",
   "description": "Detects and processes text entered into textareas and uppercases it.",
-  "permissions": ["scripting", "activeTab", "storage"],
+  "permissions": ["scripting", "activeTab", "storage", "https://127.0.0.1/", "http://localhost:5000/"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
