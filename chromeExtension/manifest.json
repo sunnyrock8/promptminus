@@ -5,11 +5,12 @@
   "description": "Detects and processes text entered into textareas and uppercases it.",
   "permissions": ["scripting", "activeTab", "storage", "https://127.0.0.1/", "http://localhost:5000/"],
   "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
+    { 
+      "matches": ["https://chatgpt.com/*"],
       "js": ["content.js"]
     }
   ],
+  
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -17,5 +18,11 @@
   },
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icon128.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
