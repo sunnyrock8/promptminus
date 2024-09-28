@@ -7,17 +7,24 @@
 
     function setNativeValue(element, value) {
         console.log("Setting native value:", value);
+
+        // Update the DOM element value directly
         const valueSetter = Object.getOwnPropertyDescriptor(element.__proto__, 'value').set;
         const prototype = Object.getPrototypeOf(element);
         const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
 
         if (valueSetter && valueSetter !== prototypeValueSetter) {
-            console.log("Using prototype value setter.");
             prototypeValueSetter.call(element, value);
         } else {
-            console.log("Using default value setter.");
             valueSetter.call(element, value);
         }
+
+        // Dispatch the 'input' event so Vue.js picks up the change
+        const event = new Event('input', { bubbles: true });
+        element.dispatchEvent(event);
+
+        // Optionally dispatch 'change' event for compatibility with other event listeners
+        element.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     function emulateKeystrokes(textarea, processedText) {
@@ -71,9 +78,8 @@
 
                         if (processedText !== promptText) {
                             console.log("Processed text differs from input, updating...");
-                            emulateKeystrokes(textarea, processedText);
+                            setNativeValue(textarea, processedText);
                             textarea.setSelectionRange(cursorPosition, cursorPosition);
-                            textarea.dispatchEvent(new Event('input', { bubbles: true }));
                         }
                     }
                 });
@@ -108,4 +114,3 @@
 
     window.addEventListener('beforeunload', cleanup);
 })();
-
