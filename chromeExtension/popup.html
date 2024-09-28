@@ -4,20 +4,116 @@
     <title>Prompt+ Settings</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family:'Courier New', Courier, monospace;
         margin: 10px;
+        background-color: #141414;
+        color: #e0e0e0;
+        width: 400px;
+        height: 400px;
+        text-align: center;
+      }
+      h1 {
+        color: #7eb2ce;
+        text-align: center;
       }
       label {
         font-size: 14px;
+        color:#e0e0e0;
+      }
+      input[type="checkbox"] {
+        margin-right: 80px;
+      }
+      .button {
+        background-color: #7eb2ce;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .button-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .genbutton {
+        background-color: #2c6b8e;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .output-box {
+        width: 90%;
+        height: 100px;
+        background-color: #222;
+        color: #e0e0e0;
+        border: 1px solid #555;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 20px auto;
+        resize: none;
+      }
+      .copy-btn {
+        background-color: #7eb2ce;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .copy-container {
+        text-align: center;
+      }
+      img {
+        width: 100px;
+        height: auto;
+        align-items: center;
       }
     </style>
   </head>
   <body>
-    <h1>Prompt+ Extension</h1>
-    <label>
-      <input type="checkbox" id="toggleUppercase" /> Enable Uppercase Transformation
-    </label>
+    <img src="logoheader.png" alt="Extension Logo" />
 
-    <script src="popup.js"></script>
+    <!-- <h1>Prompt+</h1> -->
+    <!-- <label>
+      <input type="checkbox" id="toggleUppercase" /> Enable Uppercase Transformation
+    </label> -->
+
+    <div class="button-container">
+      <button class="button">text: detail</button>
+      <button class="button">text: shorter</button>
+      <button class="button">code</button>
+
+      <button class="genbutton">
+        <span class="generate-icon">&#x2726;</span>
+        generate
+      </button>
+    </div>
+
+    <textarea class="output-box" id="outputText" readonly>Your output will appear here...</textarea>
+    
+    <div class="copy-container">
+      <button class="copy-btn" onclick="copyText()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+      function copyText() {
+        const outputText = document.getElementById("outputText");
+        outputText.select();
+        document.execCommand("copy");
+        alert("Copied to clipboard!");
+      }
+    </script>
   </body>
 </html>
