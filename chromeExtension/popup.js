@@ -11,4 +11,3 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.storage.local.set({ isUppercaseEnabled: toggle.checked });
     });
   });
-  
