@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo on Text Highlight</title>
+    <style>
+        /* Style for the logo overlay */
+        #logoOverlay {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            display: none;
+            z-index: 1000;
+            background-image: url('your-logo-url.png'); /* Replace with your logo URL */
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <!-- The logo element -->
+    <div id="logoOverlay"></div>
+
+    <script>
+        const logoOverlay = document.getElementById('logoOverlay');
+
+        // Function to show the logo
+        function showLogo() {
+            const selection = window.getSelection().toString();
+            if (selection.length > 0) {
+                // Show the logo if text is highlighted
+                logoOverlay.style.display = 'block';
+            } else {
+                // Hide the logo if no text is highlighted
+                logoOverlay.style.display = 'none';
+            }
+        }
+
+        // Event listener for text selection
+        document.addEventListener('selectionchange', showLogo);
+    </script>
+</body>
+</html>
