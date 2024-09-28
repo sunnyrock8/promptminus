@@ -2,12 +2,21 @@ import os
 import tiktoken
 import spacy
 import string
+
 from flask import Flask, request
 from flask_cors import CORS 
+
+import time 
+from backend_services import add_prompt_plus_to_db
+from backend_services import add_original_prompt_to_db
+
 
 from text import lemmatize_text
 from code_compressor_v1 import shorten_code
 
+def write_to_file(filename, content):
+    with open(filename, 'w') as file:
+        file.write(content)
 
 # Initialize tiktoken encoding and spaCy NLP
 enc = tiktoken.get_encoding("o200k_base")
@@ -22,6 +31,10 @@ def write_to_file(filename, content):
     with open(filename, 'w') as file:
         file.write(content)
 
+
+#firebase update 
+#add_prompt_to_db(prompt, counter)
+
 # Function to calculate token usage and reduction percentage
 def calculate_token_reduction(original, simplified):
   orig_tokens = enc.encode(original)
@@ -35,6 +48,8 @@ def calculate_token_reduction(original, simplified):
   return reduction
 
 def detect_text_type(prompt):
+  counter = 9
+  add_original_prompt_to_db(prompt, counter)
   doc = nlp(prompt)
   # Check for token patterns typically found in code or math
   code_like = any(token.pos_ in {'SYM'} for token in doc)
@@ -42,10 +57,14 @@ def detect_text_type(prompt):
       print("Code/Math")
       # Simplify the code
       simplified_code = shorten_code(prompt)
+      add_prompt_plus_to_db(simplified_code, counter)
+      counter += 1
   #Otherwise, classify it as plain text
-  else: 
+  else:
       print("plain text")
       simplified_code = lemmatize_text(prompt)
+      add_prompt_plus_to_db(simplified_code, counter)
+      counter+=1
   output_file = "simplified_code_ANYAVERSION.txt"
   write_to_file(output_file, simplified_code)
   # # Token usage and reduction calculation
