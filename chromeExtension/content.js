@@ -3,6 +3,8 @@
         const typingDelay = 4000; // Delay time in milliseconds
         let isPopupOpen = false; // State to track if the popup is open
         let popupElement = null; // Reference to the popup element
+        let isDragging = false; // State to track if the popup is being dragged
+        let dragOffset = { x: 0, y: 0 }; // Offset for dragging
     
         // Asynchronous function to process the prompt text
         async function processPrompt(text) {
@@ -24,82 +26,108 @@
             }
         }
     
-
-
-
-// Function to create the popup
-function createPopup(text) {
-    // Check if popup already exists
-    if (popupElement) return;
-
-    // Create the popup element
-    popupElement = document.createElement('div');
-    popupElement.style.position = 'fixed';
-    popupElement.style.top = '50%';
-    popupElement.style.left = '50%';
-    popupElement.style.transform = 'translate(-50%, -50%)';
-    popupElement.style.padding = '20px';
-    popupElement.style.backgroundColor = '#141414'; // Dark background color
-    popupElement.style.border = '2px solid #7eb2ce'; // Light blue border color
-    popupElement.style.zIndex = '1001';
-    popupElement.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)'; // Deeper shadow for a floating effect
-    popupElement.style.borderRadius = '10px'; // Rounded corners
-    popupElement.style.fontFamily = 'Arial, sans-serif'; // A cleaner font
-    popupElement.style.fontSize = '16px'; // Increase font size for better readability
-    popupElement.style.color = '#ffffff'; // White text color for contrast
-    popupElement.style.transition = 'opacity 0.3s ease-in-out'; // Smooth transition effect
-    popupElement.style.opacity = '0'; // Start as transparent, to allow for fade-in effect
-    popupElement.style.minWidth = '300px'; // Minimum width for the popup
-    popupElement.style.minHeight = '150px'; // Minimum height for the popup
-    popupElement.style.maxWidth = '600px'; // Maximum width for the popup
-    popupElement.style.maxHeight = '400px'; // Maximum height for the popup
-    popupElement.style.overflowY = 'auto'; // Add vertical scroll if content exceeds max height
-    popupElement.innerHTML = `<p>${text}</p>`;
-
-    // Create the close button as a cross (X) at the top-right corner
-    let closeButton = document.createElement('button');
-    closeButton.innerHTML = '&times;'; // Unicode for "×" symbol
-    closeButton.style.position = 'absolute';
-    closeButton.style.top = '10px';
-    closeButton.style.right = '10px';
-    closeButton.style.background = 'transparent'; // Make the background transparent
-    closeButton.style.border = 'none'; // Remove the border
-    closeButton.style.fontSize = '20px'; // Make the X larger
-    closeButton.style.padding = '0'; // Add padding around the cross
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.color = '#ffffff'; // White color for the X button
-
-    // Append the close button to the popup
-    popupElement.appendChild(closeButton);
-
-    // Append the popup to the body
-    document.body.appendChild(popupElement);
-
-    // Use setTimeout to trigger the fade-in effect
-    setTimeout(() => {
-        popupElement.style.opacity = '1'; // Fully visible after fade-in
-    }, 10);
-
-    // Add event listener to close the popup when the close button is clicked
-    closeButton.addEventListener('click', closePopup);
-}
-
-// Function to close the popup and update the text in the input
-function closePopup() {
-    if (popupElement) {
-        popupElement.style.opacity = '0'; // Trigger fade-out effect
-        setTimeout(() => {
-            popupElement.remove(); // Remove the popup after the transition
-            popupElement = null; // Reset the reference
-            isPopupOpen = false; // Set popup state to false
-        }, 300); // Match transition duration to the fade-out time
-    }
-}
-
-
-
-
-    // Function to create the uppercase button
+        // Function to create the popup
+        function createPopup(text) {
+            // Check if popup already exists
+            if (popupElement) return;
+    
+            // Create the popup element
+            popupElement = document.createElement('div');
+            popupElement.style.position = 'fixed';
+            popupElement.style.top = '50%';
+            popupElement.style.left = '50%';
+            popupElement.style.transform = 'translate(-50%, -50%)';
+            popupElement.style.padding = '20px';
+            popupElement.style.backgroundColor = '#141414';
+            popupElement.style.border = '2px solid #7eb2ce';
+            popupElement.style.zIndex = '1001';
+            popupElement.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
+            popupElement.style.borderRadius = '10px';
+            popupElement.style.fontFamily = 'Arial, sans-serif';
+            popupElement.style.fontSize = '16px';
+            popupElement.style.color = '#ffffff';
+            popupElement.style.transition = 'opacity 0.3s ease-in-out';
+            popupElement.style.opacity = '0';
+            popupElement.style.minWidth = '300px';
+            popupElement.style.minHeight = '150px';
+            popupElement.style.maxWidth = '600px';
+            popupElement.style.maxHeight = '400px';
+            popupElement.style.overflowY = 'auto';
+            popupElement.style.cursor = 'grab'; // Add grab cursor for draggable indication
+            popupElement.innerHTML = `<p>${text}</p>`;
+    
+            // Create the close button
+            let closeButton = document.createElement('button');
+            closeButton.innerHTML = '&times;';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
+            closeButton.style.background = 'transparent';
+            closeButton.style.border = 'none';
+            closeButton.style.fontSize = '20px';
+            closeButton.style.padding = '0';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.color = '#ffffff';
+    
+            // Append the close button to the popup
+            popupElement.appendChild(closeButton);
+    
+            // Append the popup to the body
+            document.body.appendChild(popupElement);
+    
+            // Use setTimeout to trigger the fade-in effect
+            setTimeout(() => {
+                popupElement.style.opacity = '1';
+            }, 10);
+    
+            // Add event listener to close the popup when the close button is clicked
+            closeButton.addEventListener('click', closePopup);
+    
+            // Add event listeners for dragging
+            popupElement.addEventListener('mousedown', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+        }
+    
+        // Function to start dragging
+        function startDragging(e) {
+            if (e.target.tagName.toLowerCase() === 'button') return; // Prevent dragging when clicking the close button
+            isDragging = true;
+            const rect = popupElement.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            popupElement.style.cursor = 'grabbing';
+        }
+    
+        // Function to handle dragging
+        function drag(e) {
+            if (!isDragging) return;
+            const newX = e.clientX - dragOffset.x;
+            const newY = e.clientY - dragOffset.y;
+            popupElement.style.left = `${newX}px`;
+            popupElement.style.top = `${newY}px`;
+            popupElement.style.transform = 'none'; // Remove the initial centering transform
+        }
+    
+        // Function to stop dragging
+        function stopDragging() {
+            isDragging = false;
+            popupElement.style.cursor = 'grab';
+        }
+    
+        // Function to close the popup and update the text in the input
+        function closePopup() {
+            if (popupElement) {
+                popupElement.style.opacity = '0'; // Trigger fade-out effect
+                setTimeout(() => {
+                    popupElement.remove(); // Remove the popup after the transition
+                    popupElement = null; // Reset the reference
+                    isPopupOpen = false; // Set popup state to false
+                }, 300); // Match transition duration to the fade-out time
+            }
+        }
+    
+        // Function to create the uppercase button
         function createUppercaseButton(input) {
             const uniqueId = input.dataset.uniqueId;
             const existingButton = document.querySelector(`#uppercase-button-${uniqueId}`);
@@ -118,7 +146,7 @@ function closePopup() {
             const imageUrl = chrome.runtime.getURL("roundlogo.png");
     
             // Use an image as the button content
-            button.innerHTML = `<img src="${imageUrl}" alt="UPPERCASE" style="width: 25px; height: 25px;" />`;
+            button.innerHTML = `<img src="${imageUrl}" alt="UPPERCASE" style="width: 24px; height: 24px;" />`;
     
             // Style the button
             button.style.position = 'absolute';
@@ -244,4 +272,3 @@ function closePopup() {
     
         window.addEventListener('beforeunload', cleanup);
     })();
-    

@@ -33,6 +33,12 @@ add_prompt_plus_to_db("random")
 #     'original prompt'+" "+ str(counter): prompt
 #     })
 
+def add_gpt_to_db(gpt):
+    ref = db.reference('/gptresponse')
+    unique_id = uuid.uuid4().hex + ""
+    ref.update({
+    'gpt '+" "+ unique_id: gpt
+    })
 
 def get_prompt_plus_arr_from_db():
     ref = db.reference('/plus')
