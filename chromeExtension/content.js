@@ -52,7 +52,7 @@
             button.style.backgroundColor = 'transparent'; // Make the button background transparent
             button.style.border = 'none'; // Remove the border
             button.style.cursor = 'pointer';
-            button.style.marginLeft = '8px'; // Margin for placement next to input
+            button.style.marginLeft = '6px'; // Margin for placement next to input
         
             // Position the button relative to the input
             const inputRect = input.getBoundingClientRect();
