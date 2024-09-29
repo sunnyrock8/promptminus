@@ -27,12 +27,12 @@
         background-color: #7eb2ce;
         border: none;
         color: white;
-        padding: 10px 20px;
+        padding: 5px 10px;
         text-align: center;
         text-decoration: none;
         display: inline-block;
         font-size: 14px;
-        margin: 10px;
+        margin: 5px;
         cursor: pointer;
         border-radius: 5px;
       }
@@ -48,8 +48,8 @@
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 14px;
-        margin: 10px;
+        font-size: 18px;
+        margin: 15px;
         cursor: pointer;
         border-radius: 5px;
       }
@@ -61,7 +61,7 @@
         border: 1px solid #555;
         border-radius: 5px;
         padding: 10px;
-        margin: 20px auto;
+        margin: 10px auto;
         resize: none;
       }
       .copy-btn {
@@ -74,13 +74,17 @@
       }
       .copy-container {
         text-align: center;
+        padding: 0px 10px;
       }
       img {
-        width: 100px;
+        width: 200px;
         height: auto;
         align-items: center;
       }
     </style>
+
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
   </head>
   <body>
     <img src="logoheader.png" alt="Extension Logo" />
@@ -91,20 +95,23 @@
     </label> -->
 
     <div class="button-container">
-      <button class="button">text: detail</button>
+      <!-- <button class="button">text: detail</button>
       <button class="button">text: shorter</button>
-      <button class="button">code</button>
+      <button class="button">code</button> -->
 
       <button class="genbutton">
         <span class="generate-icon">&#x2726;</span>
-        generate
+        contextualize
       </button>
     </div>
 
     <textarea class="output-box" id="outputText" readonly>Your output will appear here...</textarea>
     
     <div class="copy-container">
-      <button class="copy-btn" onclick="copyText()">Copy to Clipboard</button>
+      <button class="copy-btn" onclick="copyText()">
+        <i class="fas fa-clipboard"></i>
+        copy to clipboard
+      </button>
     </div>
 
     <script>
