@@ -20,7 +20,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://chatgpt.com"}})
 
 # Initialize OpenAI client
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key='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')
+client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key='API_KEY')
 
 # Initialize Firebase
 cred = credentials.Certificate("fb_credentials.json")
