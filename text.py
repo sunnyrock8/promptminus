@@ -4,7 +4,7 @@ import spacy
 import string
 
 # Set your OpenAI API key securely (for testing only)
-os.environ["OPENAI_API_KEY"] = "API_KEY"
+os.environ["OPENAI_API_KEY"] = "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"
 
 # Initialize tiktoken encoding and spaCy NLP
 enc = tiktoken.get_encoding("o200k_base")
