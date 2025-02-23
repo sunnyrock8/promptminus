@@ -17,16 +17,16 @@ enc = tiktoken.encoding_for_model("gpt-4")
 nlp = spacy.load('en_core_web_sm')
 
 app = Flask(__name__)
-CORS(app, resources={r"/receive_event": {"origins": "https://chatgpt.com"}})
+CORS(app, resources={r"/*": {"origins": "https://chatgpt.com"}})
 
 # Initialize OpenAI client
-client = OpenAI(api_key='api key here')
+client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key='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')
 
 # Initialize Firebase
 cred = credentials.Certificate("fb_credentials.json")
 try:
     firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://prompt-plus-580e5-default-rtdb.firebaseio.com/'
+        'databaseURL': 'https://prompt-plus-ai-default-rtdb.firebaseio.com/'
     })
 except ValueError as e:
     if "The default Firebase app already exists" in str(e):
