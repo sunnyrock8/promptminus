@@ -7,7 +7,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 
 # Set your OpenAI API key securely (for testing only)
-os.environ["OPENAI_API_KEY"] = ""
+os.environ["OPENAI_API_KEY"] = "API_KEY"
 
 # Initialize tiktoken encoding and spaCy NLP
 enc = tiktoken.get_encoding("o200k_base")
